@@ -12,10 +12,12 @@ router.post('/login',(req, res, next) => {
       failureRedirect: 'https://res.cloudinary.com/lucy2619288/image/upload/v1626764202/err_zunxon.png',
       failureFlash: true
     })(req, res, next);
+    console.log(res.send(req.flash('accesstoken')))
+
   });
 
   router.get('/infor', auth, userCtrl.getInformationUser)
-  router.get('/all', auth, userCtrl.getAllUser)
+  router.get('/all',auth, userCtrl.getAllUser)
   router.delete('/delete/:id', auth, userCtrl.deleteUser)
   router.get('/access_token', (req, res) => {
     res.send(req.flash('accesstoken'));

@@ -2,13 +2,19 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const morgan = require('morgan');
 var passport = require('passport');
 var flash = require('connect-flash');
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
+const logger = require('./middleware/logger')
 
 //Passport config
-
+//don't show the log when it is test
+if(process.env.NODE_ENV !== 'test') {
+  //use morgan to log at command line
+  app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
+}
 
 const app = express()
 app.use(express.json({limit: '8000mb'}))
@@ -29,7 +35,7 @@ app.use(flash())
 require('./middleware/configPassport')(passport)
 
 
-app.use('/user', require('./routes/userRouter'))
+app.use('/user', require('./routes/userRouter'))//k viết require
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/task5', {
@@ -44,5 +50,5 @@ mongoose.connect('mongodb://127.0.0.1:27017/task5', {
 
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => {
-    console.log('Server is running on port', PORT)
+  logger.log('info',`Server is running on port: ${PORT}`)
 })
